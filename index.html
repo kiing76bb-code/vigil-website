@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vigil — Watch · Alert · Win</title>
+  <meta name="description" content="Vigil watches prices so you don't have to. Get alerted the moment any product drops to your target price.">
+  <meta property="og:title" content="Vigil — Watch · Alert · Win">
+  <meta property="og:description" content="Price intelligence for deal hunters and smart shoppers.">
+  <meta property="og:url" content="https://vigildrop.com">
+  <link rel="canonical" href="https://vigildrop.com">
+  <style>
+    :root {
+      --bg: #080810;
+      --gold: #F5C842;
+      --green: #00E5A0;
+      --white: #F0EEF8;
+      --card: #12121F;
+      --border: rgba(245, 200, 66, 0.15);
+      --muted: rgba(240, 238, 248, 0.55);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6vw;
+      background: rgba(8, 8, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 22px; letter-spacing: 4px;
+    }
+    .logo .eye {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+    .nav-links a:not(.cta-btn) { color: var(--muted); transition: color .2s; }
+    .nav-links a:not(.cta-btn):hover { color: var(--gold); }
+    .cta-btn {
+      background: var(--gold); color: var(--bg);
+      padding: 10px 22px; border-radius: 8px;
+      font-weight: 700; font-size: 14px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 200, 66, 0.35); }
+
+    /* ── Hero ────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 110px 6vw 90px;
+      position: relative;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(245, 200, 66, 0.08), transparent);
+      pointer-events: none;
+    }
+    .hero .tagline {
+      color: var(--gold); font-size: 13px; font-weight: 700;
+      letter-spacing: 6px; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 800; line-height: 1.12;
+      max-width: 760px; margin: 0 auto 22px;
+    }
+    .hero h1 .gold { color: var(--gold); }
+    .hero p {
+      color: var(--muted); font-size: 18px;
+      max-width: 560px; margin: 0 auto 38px;
+    }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .ghost-btn {
+      border: 1px solid var(--border); color: var(--white);
+      padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 15px;
+      transition: border-color .2s, color .2s;
+    }
+    .ghost-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .hero .cta-btn { padding: 12px 28px; font-size: 15px; }
+
+    /* ── Live ticker strip ───────────────────── */
+    .strip {
+      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+      padding: 22px 6vw;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      font-size: 14px; color: var(--muted);
+    }
+    .strip b { color: var(--green); font-weight: 700; }
+
+    /* ── Sections ────────────────────────────── */
+    section { padding: 90px 6vw; max-width: 1180px; margin: 0 auto; }
+    .section-label {
+      color: var(--gold); font-size: 12px; font-weight: 700;
+      letter-spacing: 5px; text-transform: uppercase; margin-bottom: 14px;
+    }
+    h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
+    .section-sub { color: var(--muted); max-width: 540px; margin-bottom: 50px; }
+
+    /* ── Features ────────────────────────────── */
+    .feature-grid {
+      display: grid; gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 28px;
+      transition: transform .25s, border-color .25s;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(245, 200, 66, 0.4); }
+    .card .icon { font-size: 26px; margin-bottom: 16px; display: block; }
+    .card h3 { font-size: 19px; margin-bottom: 10px; }
+    .card p { color: var(--muted); font-size: 15px; }
+
+    /* ── Pricing ─────────────────────────────── */
+    .pricing-grid {
+      display: grid; gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      align-items: stretch;
+    }
+    .price-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 38px 30px 32px;
+      display: flex; flex-direction: column;
+      transition: transform .25s, border-color .25s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.popular {
+      border-color: var(--gold);
+      box-shadow: 0 0 40px rgba(245, 200, 66, 0.12);
+    }
+    .popular-badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: var(--bg);
+      font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 999px; white-space: nowrap;
+    }
+    .tier-name { font-size: 14px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .tier-price { font-size: 42px; font-weight: 800; }
+    .tier-price span { font-size: 16px; color: var(--muted); font-weight: 500; }
+    .tier-features { list-style: none; margin: 26px 0 30px; flex: 1; }
+    .tier-features li {
+      color: var(--muted); font-size: 15px; padding: 7px 0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .tier-features li::before { content: "✓"; color: var(--green); font-weight: 800; }
+    .tier-cta {
+      display: block; text-align: center;
+      padding: 13px 0; border-radius: 8px; font-weight: 700; font-size: 15px;
+      transition: transform .2s, box-shadow .2s, border-color .2s, color .2s;
+    }
+    .tier-cta.gold { background: var(--gold); color: var(--bg); }
+    .tier-cta.gold:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 200, 66, 0.35); }
+    .tier-cta.ghost { border: 1px solid var(--border); color: var(--white); }
+    .tier-cta.ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── Footer ──────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 50px 6vw;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 14px;
+    }
+    footer .logo { justify-content: center; margin-bottom: 14px; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="https://vigildrop.com" class="logo"><span class="eye"></span>VIGIL</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="https://vigildrop.com/pricing" class="cta-btn">Start Watching</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="tagline">Watch · Alert · Win</div>
+    <h1>Never overpay <span class="gold">again.</span></h1>
+    <p>Vigil watches prices so you don't have to. Set your target, walk away, and get alerted the moment any product drops to your number.</p>
+    <div class="hero-ctas">
+      <a href="https://vigildrop.com/pricing" class="cta-btn">Track Your First Product — Free</a>
+      <a href="#features" class="ghost-btn">See How It Works</a>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div>Checks every <b>6 hours</b>, around the clock</div>
+    <div>Alerts in <b>seconds</b> of a drop</div>
+    <div>Tracking <b>Amazon</b> — travel &amp; more coming</div>
+  </div>
+
+  <section id="features">
+    <div class="section-label">Features</div>
+    <h2>Your always-on price sentinel.</h2>
+    <p class="section-sub">Three steps between you and the best price on anything.</p>
+    <div class="feature-grid">
+      <div class="card">
+        <span class="icon">👁</span>
+        <h3>Watch Anything</h3>
+        <p>Paste any Amazon link and set your target price. Vigil checks it every 6 hours — silently, reliably, forever.</p>
+      </div>
+      <div class="card">
+        <span class="icon">⚡</span>
+        <h3>Instant Alerts</h3>
+        <p>The moment a price hits your target, Vigil fires an alert to Discord or your inbox. No refreshing. No FOMO.</p>
+      </div>
+      <div class="card">
+        <span class="icon">📈</span>
+        <h3>Price History</h3>
+        <p>Every check is recorded. See the real price trend, spot fake "sales," and buy at the true bottom.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="section-label">Pricing</div>
+    <h2>Pick your level of vigilance.</h2>
+    <p class="section-sub">Start free. Upgrade when your watchlist outgrows it.</p>
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="tier-name">Free</div>
+        <div class="tier-price">$0<span>/forever</span></div>
+        <ul class="tier-features">
+          <li>5 tracked products</li>
+          <li>Email alerts</li>
+          <li>Price history</li>
+        </ul>
+        <a href="https://vigildrop.com/pricing" class="tier-cta ghost">Start Free</a>
+      </div>
+
+      <div class="price-card popular">
+        <div class="popular-badge">Most Popular</div>
+        <div class="tier-name">Pro</div>
+        <div class="tier-price">$9<span>/mo</span></div>
+        <ul class="tier-features">
+          <li>25 tracked products</li>
+          <li>Discord + email alerts</li>
+          <li>Price history</li>
+          <li>Priority checks</li>
+        </ul>
+        <a href="https://vigildrop.com/pricing" class="tier-cta gold">Go Pro</a>
+      </div>
+
+      <div class="price-card">
+        <div class="tier-name">Elite</div>
+        <div class="tier-price">$29<span>/mo</span></div>
+        <ul class="tier-features">
+          <li>Unlimited products</li>
+          <li>SMS + Discord + email</li>
+          <li>API access</li>
+          <li>Everything in Pro</li>
+        </ul>
+        <a href="https://vigildrop.com/pricing" class="tier-cta ghost">Go Elite</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo"><span class="eye"></span>VIGIL</div>
+    <div>© 2026 Axis Creative LLC · vigildrop.com</div>
+  </footer>
+
+</body>
+</html>
