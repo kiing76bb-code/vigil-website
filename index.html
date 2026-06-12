@@ -10,50 +10,57 @@
   <meta property="og:url" content="https://vigildrop.com">
   <link rel="canonical" href="https://vigildrop.com">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap');
+
     :root {
-      --bg: #080810;
+      --bg: #06060F;
       --gold: #F5C842;
+      --cyan: #00D4FF;
       --green: #00E5A0;
+      --crimson: #FF3B3B;
+      --purple: #7C3AED;
       --white: #F0EEF8;
+      --muted: rgba(240, 238, 248, 0.5);
       --card: #12121F;
       --border: rgba(245, 200, 66, 0.15);
-      --muted: rgba(240, 238, 248, 0.55);
+      --cyan-border: rgba(0, 212, 255, 0.25);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       background: var(--bg);
       color: var(--white);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'Sora', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
     }
     a { color: inherit; text-decoration: none; }
+    s { color: var(--muted); }
 
-    /* ── Nav ─────────────────────────────────── */
+    /* ════ NAV ════════════════════════════════ */
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 6vw;
-      background: rgba(8, 8, 16, 0.85);
-      backdrop-filter: blur(12px);
+      padding: 16px 6vw;
+      background: rgba(6, 6, 15, 0.82);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
     .logo {
       display: flex; align-items: center; gap: 10px;
-      font-weight: 800; font-size: 22px; letter-spacing: 4px;
+      font-weight: 800; font-size: 21px; letter-spacing: 4px;
     }
     .logo .eye {
-      width: 12px; height: 12px; border-radius: 50%;
+      width: 11px; height: 11px; border-radius: 50%;
       background: var(--gold);
       box-shadow: 0 0 12px var(--gold);
       animation: pulse 2.4s ease-in-out infinite;
     }
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
+      50% { opacity: .45; transform: scale(.78); }
     }
-    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
+    .nav-links { display: flex; align-items: center; gap: 26px; font-size: 14px; }
     .nav-links a:not(.cta-btn) { color: var(--muted); transition: color .2s; }
     .nav-links a:not(.cta-btn):hover { color: var(--gold); }
     .cta-btn {
@@ -62,65 +69,241 @@
       font-weight: 700; font-size: 14px;
       transition: transform .2s, box-shadow .2s;
     }
-    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 200, 66, 0.35); }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 200, 66, .35); }
 
-    /* ── Hero ────────────────────────────────── */
+    /* ════ HERO ═══════════════════════════════ */
     .hero {
-      text-align: center;
-      padding: 110px 6vw 90px;
       position: relative;
+      min-height: 86vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+      align-items: center;
+      gap: 40px;
+      padding: 70px 6vw 80px;
+      overflow: hidden;
     }
-    .hero::before {
-      content: "";
+    #hero-canvas {
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(245, 200, 66, 0.08), transparent);
+      width: 100%; height: 100%;
+      z-index: 0;
       pointer-events: none;
     }
-    .hero .tagline {
-      color: var(--gold); font-size: 13px; font-weight: 700;
-      letter-spacing: 6px; text-transform: uppercase;
+    .hero-copy { position: relative; z-index: 1; }
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 4px;
+      min-height: 18px;
       margin-bottom: 22px;
+      text-transform: uppercase;
     }
+    .eyebrow .cursor {
+      display: inline-block; width: 8px;
+      background: var(--cyan); color: transparent;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
     .hero h1 {
-      font-size: clamp(38px, 6vw, 64px);
-      font-weight: 800; line-height: 1.12;
-      max-width: 760px; margin: 0 auto 22px;
+      font-size: clamp(40px, 5.4vw, 66px);
+      font-weight: 800; line-height: 1.08;
+      margin-bottom: 24px;
     }
-    .hero h1 .gold { color: var(--gold); }
-    .hero p {
-      color: var(--muted); font-size: 18px;
-      max-width: 560px; margin: 0 auto 38px;
+    #price-counter {
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+      transition: color .35s, text-shadow .35s;
     }
-    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .ghost-btn {
-      border: 1px solid var(--border); color: var(--white);
-      padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 15px;
-      transition: border-color .2s, color .2s;
+    #price-counter.dropped {
+      color: var(--green);
+      text-shadow: 0 0 34px rgba(0, 229, 160, .5);
     }
-    .ghost-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .hero .cta-btn { padding: 12px 28px; font-size: 15px; }
+    .hero-sub {
+      color: var(--muted); font-size: 17px;
+      max-width: 480px; margin-bottom: 36px;
+    }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold); color: var(--bg);
+      padding: 14px 28px; border-radius: 10px;
+      font-weight: 700; font-size: 15px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245, 200, 66, .4); }
+    .btn-ghost {
+      border: 1px solid var(--cyan-border); color: var(--cyan);
+      padding: 14px 26px; border-radius: 10px;
+      font-weight: 600; font-size: 15px;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); background: rgba(0, 212, 255, .06); }
 
-    /* ── Live ticker strip ───────────────────── */
-    .strip {
-      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
-      padding: 22px 6vw;
-      border-top: 1px solid var(--border);
+    /* floating product cards */
+    .hero-cards {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .float-card {
+      background: rgba(18, 18, 31, .8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px 18px;
+      opacity: 0;
+      transform: translateX(40px);
+      animation:
+        cardIn .6s cubic-bezier(.22, .8, .36, 1) forwards,
+        floatY 4s ease-in-out infinite;
+    }
+    .float-card:nth-child(1) { animation-delay: .2s, .8s; margin-right: 36px; }
+    .float-card:nth-child(2) { animation-delay: .4s, 1.4s; margin-left: 24px; }
+    .float-card:nth-child(3) { animation-delay: .6s, 2s; margin-right: 12px; }
+    @keyframes cardIn { to { opacity: 1; transform: translateX(0); } }
+    @keyframes floatY {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -8px; }
+    }
+    .float-card .fc-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .float-card .fc-prices {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 700;
+    }
+    .float-card .fc-new { color: var(--white); }
+    .drop-badge {
+      background: rgba(0, 229, 160, .15); color: var(--green);
+      font-size: 10px; font-weight: 800; letter-spacing: .5px;
+      padding: 3px 8px; border-radius: 999px;
+    }
+
+    /* ════ TICKER ═════════════════════════════ */
+    .ticker {
+      display: flex; align-items: center;
+      border-top: 1px solid var(--cyan-border);
+      border-bottom: 1px solid var(--cyan-border);
+      background: rgba(0, 212, 255, .05);
+      overflow: hidden;
+    }
+    .live-badge {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 7px;
+      padding: 14px 18px;
+      font-size: 11px; font-weight: 800; letter-spacing: 2px;
+      color: var(--crimson);
+      border-right: 1px solid var(--cyan-border);
+      background: var(--bg);
+      z-index: 2;
+    }
+    .live-badge .red-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--crimson);
+      box-shadow: 0 0 8px var(--crimson);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .ticker-viewport { flex: 1; overflow: hidden; }
+    .ticker-track {
+      display: flex; gap: 44px; width: max-content;
+      padding: 13px 0;
+      animation: marquee 20s linear infinite;
+    }
+    .ticker:hover .ticker-track { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .tick-item {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13px; white-space: nowrap;
+    }
+    .tick-item .pct {
+      background: rgba(255, 59, 59, .15); color: var(--crimson);
+      font-size: 10px; font-weight: 800;
+      padding: 2px 7px; border-radius: 999px;
+    }
+    .tick-item .new { color: var(--green); font-weight: 700; }
+
+    /* ════ STATS BAR ══════════════════════════ */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
       border-bottom: 1px solid var(--border);
-      background: var(--card);
-      font-size: 14px; color: var(--muted);
     }
-    .strip b { color: var(--green); font-weight: 700; }
+    .stat {
+      background: var(--card);
+      text-align: center;
+      padding: 36px 16px;
+    }
+    .stat .num {
+      color: var(--gold);
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 6px;
+    }
+    .stat .lbl { color: var(--muted); font-size: 13px; }
 
-    /* ── Sections ────────────────────────────── */
-    section { padding: 90px 6vw; max-width: 1180px; margin: 0 auto; }
+    /* ════ SECTIONS ═══════════════════════════ */
+    section { padding: 95px 6vw; max-width: 1180px; margin: 0 auto; }
     .section-label {
       color: var(--gold); font-size: 12px; font-weight: 700;
       letter-spacing: 5px; text-transform: uppercase; margin-bottom: 14px;
     }
     h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
-    .section-sub { color: var(--muted); max-width: 540px; margin-bottom: 50px; }
+    .section-sub { color: var(--muted); max-width: 540px; margin-bottom: 52px; }
 
-    /* ── Features ────────────────────────────── */
+    /* ════ HOW IT WORKS ═══════════════════════ */
+    .hiw-rail { position: relative; padding-top: 8px; }
+    .hiw-line {
+      position: absolute; top: 44px; left: 8%; right: 8%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--gold), var(--green));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1.2s cubic-bezier(.22, .8, .36, 1) .2s;
+      z-index: 0;
+    }
+    .hiw.visible .hiw-line { transform: scaleX(1); }
+    .hiw-steps {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+    }
+    .step {
+      text-align: center;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .hiw.visible .step { opacity: 1; transform: translateY(0); }
+    .hiw.visible .step:nth-child(1) { transition-delay: .15s; }
+    .hiw.visible .step:nth-child(2) { transition-delay: .3s; }
+    .hiw.visible .step:nth-child(3) { transition-delay: .45s; }
+    .step .ico {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 18px;
+      background: var(--card);
+      position: relative;
+    }
+    .step:nth-child(1) .ico { border: 2px solid var(--cyan); box-shadow: 0 0 24px rgba(0, 212, 255, .2); }
+    .step:nth-child(2) .ico { border: 2px solid var(--gold); box-shadow: 0 0 24px rgba(245, 200, 66, .2); animation: pulse 2.4s ease-in-out infinite; }
+    .step:nth-child(3) .ico { border: 2px solid var(--green); box-shadow: 0 0 24px rgba(0, 229, 160, .2); }
+    .step:nth-child(3) .ico::after {
+      content: "";
+      position: absolute; inset: -2px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      animation: ringOut 2.2s ease-out infinite;
+    }
+    @keyframes ringOut {
+      from { transform: scale(1); opacity: .7; }
+      to   { transform: scale(1.55); opacity: 0; }
+    }
+    .step h3 { font-size: 18px; margin-bottom: 8px; }
+    .step p { color: var(--muted); font-size: 14px; max-width: 250px; margin: 0 auto; }
+
+    /* ════ FEATURES ═══════════════════════════ */
     .feature-grid {
       display: grid; gap: 22px;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -132,41 +315,79 @@
       padding: 32px 28px;
       transition: transform .25s, border-color .25s;
     }
-    .card:hover { transform: translateY(-4px); border-color: rgba(245, 200, 66, 0.4); }
+    .card:hover { transform: translateY(-4px); border-color: rgba(0, 212, 255, .4); }
     .card .icon { font-size: 26px; margin-bottom: 16px; display: block; }
     .card h3 { font-size: 19px; margin-bottom: 10px; }
     .card p { color: var(--muted); font-size: 15px; }
 
-    /* ── Pricing ─────────────────────────────── */
+    /* ════ PRICING ════════════════════════════ */
+    .toggle-row {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 46px;
+      font-size: 14px; font-weight: 600;
+    }
+    .toggle-row .opt { color: var(--muted); transition: color .2s; cursor: pointer; }
+    .toggle-row .opt.active { color: var(--white); }
+    .switch {
+      position: relative;
+      width: 52px; height: 28px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .switch::after {
+      content: "";
+      position: absolute; top: 3px; left: 3px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--gold);
+      transition: left .25s cubic-bezier(.22, .8, .36, 1);
+    }
+    .switch.annual::after { left: 27px; }
+    .save-pill {
+      background: rgba(0, 229, 160, .15); color: var(--green);
+      font-size: 11px; font-weight: 800;
+      padding: 4px 10px; border-radius: 999px;
+    }
     .pricing-grid {
-      display: grid; gap: 22px;
+      display: grid; gap: 24px;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       align-items: stretch;
     }
     .price-card {
       position: relative;
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 38px 30px 32px;
+      border: 1px solid rgba(240, 238, 248, .1);
+      border-radius: 16px;
+      padding: 40px 30px 32px;
       display: flex; flex-direction: column;
-      transition: transform .25s, border-color .25s;
+      transition: transform .25s;
     }
     .price-card:hover { transform: translateY(-4px); }
-    .price-card.popular {
-      border-color: var(--gold);
-      box-shadow: 0 0 40px rgba(245, 200, 66, 0.12);
+    .price-card.pro {
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 46px rgba(245, 200, 66, .18);
+      transform: scale(1.04);
     }
-    .popular-badge {
+    .price-card.pro:hover { transform: scale(1.04) translateY(-4px); }
+    .price-card.elite {
+      border: 1px solid var(--purple);
+      box-shadow: 0 0 46px rgba(124, 58, 237, .22);
+    }
+    .tier-badge {
       position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-      background: var(--gold); color: var(--bg);
       font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
       padding: 5px 14px; border-radius: 999px; white-space: nowrap;
     }
+    .tier-badge.gold { background: var(--gold); color: var(--bg); }
+    .tier-badge.purple { background: var(--purple); color: var(--white); }
     .tier-name { font-size: 14px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
-    .tier-price { font-size: 42px; font-weight: 800; }
+    .price-card.elite .tier-name { color: var(--purple); }
+    .tier-price { font-size: 42px; font-weight: 800; font-variant-numeric: tabular-nums; }
     .tier-price span { font-size: 16px; color: var(--muted); font-weight: 500; }
-    .tier-features { list-style: none; margin: 26px 0 30px; flex: 1; }
+    .billed-note { color: var(--muted); font-size: 12px; min-height: 18px; margin-top: 2px; }
+    .tier-features { list-style: none; margin: 24px 0 30px; flex: 1; }
     .tier-features li {
       color: var(--muted); font-size: 15px; padding: 7px 0;
       display: flex; align-items: center; gap: 10px;
@@ -177,19 +398,128 @@
       padding: 13px 0; border-radius: 8px; font-weight: 700; font-size: 15px;
       transition: transform .2s, box-shadow .2s, border-color .2s, color .2s;
     }
-    .tier-cta.gold { background: var(--gold); color: var(--bg); }
-    .tier-cta.gold:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 200, 66, 0.35); }
-    .tier-cta.ghost { border: 1px solid var(--border); color: var(--white); }
-    .tier-cta.ghost:hover { border-color: var(--gold); color: var(--gold); }
+    .tier-cta.gold-btn { background: var(--gold); color: var(--bg); }
+    .tier-cta.gold-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(245, 200, 66, .35); }
+    .tier-cta.ghost-btn { border: 1px solid rgba(240, 238, 248, .2); color: var(--white); }
+    .tier-cta.ghost-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .price-card.elite .tier-cta.ghost-btn:hover { border-color: var(--purple); color: var(--purple); }
 
-    /* ── Footer ──────────────────────────────── */
-    footer {
-      text-align: center;
-      padding: 50px 6vw;
-      border-top: 1px solid var(--border);
-      color: var(--muted); font-size: 14px;
+    /* ════ DISCORD TOAST ══════════════════════ */
+    #discord-toast {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 330px; max-width: calc(100vw - 40px);
+      background: #1E1F22;
+      border-left: 4px solid var(--crimson);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, .6);
+      z-index: 200;
+      transform: translateX(120%);
+      transition: transform .45s cubic-bezier(.22, .8, .36, 1);
+      font-size: 13px;
     }
-    footer .logo { justify-content: center; margin-bottom: 14px; font-size: 18px; }
+    #discord-toast.show { transform: translateX(0); }
+    .dt-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .dt-discord-ico { color: #80848E; font-size: 14px; }
+    .dt-channel { color: #80848E; font-size: 12px; font-weight: 600; }
+    .dt-bot { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .dt-bot .bot-name { color: var(--white); font-weight: 700; font-size: 14px; }
+    .dt-check {
+      background: #5865F2; color: #fff;
+      font-size: 9px; font-weight: 800;
+      padding: 1px 6px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+    .dt-embed {
+      background: #2B2D31;
+      border-left: 4px solid var(--crimson);
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .dt-embed .dt-title { font-weight: 800; font-size: 13px; margin-bottom: 10px; }
+    .dt-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-bottom: 12px; }
+    .dt-field .k { color: #80848E; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+    .dt-field .v { font-size: 13px; font-weight: 600; }
+    .dt-field .v.green { color: var(--green); }
+    .dt-field .v.gold { color: var(--gold); }
+    .dt-buy {
+      display: inline-block;
+      background: #5865F2; color: #fff;
+      font-size: 12px; font-weight: 700;
+      padding: 7px 14px; border-radius: 4px;
+      transition: background .2s;
+    }
+    .dt-buy:hover { background: #4752C4; }
+
+    /* ════ FOOTER ═════════════════════════════ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 60px 6vw 0;
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 36px;
+      max-width: 1180px; margin: 0 auto;
+      padding-bottom: 44px;
+    }
+    .foot-brand .logo { margin-bottom: 12px; font-size: 18px; }
+    .foot-brand p { color: var(--muted); font-size: 13px; max-width: 240px; }
+    .foot-brand .tag { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 3px; margin-top: 10px; text-transform: uppercase; }
+    .foot-col h4 {
+      font-size: 12px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--white);
+      margin-bottom: 16px;
+    }
+    .foot-col a {
+      display: block;
+      color: var(--muted); font-size: 14px;
+      padding: 5px 0;
+      transition: color .2s;
+    }
+    .foot-col a:hover { color: var(--gold); }
+    .foot-bottom {
+      border-top: 1px solid rgba(240, 238, 248, .07);
+      text-align: center;
+      padding: 22px 0 28px;
+      color: var(--muted); font-size: 12px;
+      line-height: 1.8;
+    }
+
+    /* ════ RESPONSIVE ═════════════════════════ */
+    @media (max-width: 768px) {
+      .nav-links a:not(.cta-btn) { display: none; }
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 56px;
+        gap: 48px;
+      }
+      .hero-cards { max-width: 420px; }
+      .float-card:nth-child(odd), .float-card:nth-child(even) { margin: 0; }
+      .hiw-steps { grid-template-columns: 1fr; gap: 44px; }
+      .hiw-line { display: none; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .price-card.pro { transform: none; }
+      .price-card.pro:hover { transform: translateY(-4px); }
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+      #discord-toast { bottom: 16px; right: 16px; }
+    }
+
+    /* ════ REDUCED MOTION ═════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      .float-card { opacity: 1; transform: none; }
+      .hiw .step { opacity: 1; transform: none; }
+      .hiw .hiw-line { transform: scaleX(1); }
+      .ticker-track { animation: none; }
+      #hero-canvas { display: none; }
+      #discord-toast { transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -197,32 +527,106 @@
   <nav>
     <a href="https://vigildrop.com" class="logo"><span class="eye"></span>VIGIL</a>
     <div class="nav-links">
+      <a href="#how">How It Works</a>
       <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
       <a href="https://vigildrop.com/pricing" class="cta-btn">Start Watching</a>
     </div>
   </nav>
 
+  <!-- ════ HERO ═══════════════════════════════ -->
   <header class="hero">
-    <div class="tagline">Watch · Alert · Win</div>
-    <h1>Never overpay <span class="gold">again.</span></h1>
-    <p>Vigil watches prices so you don't have to. Set your target, walk away, and get alerted the moment any product drops to your number.</p>
-    <div class="hero-ctas">
-      <a href="https://vigildrop.com/pricing" class="cta-btn">Track Your First Product — Free</a>
-      <a href="#features" class="ghost-btn">See How It Works</a>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+    <div class="hero-copy">
+      <div class="eyebrow"><span id="type-target"></span><span class="cursor">|</span></div>
+      <h1>
+        Never Overpay<br>
+        <span id="price-counter">$999</span>
+      </h1>
+      <p class="hero-sub">Vigil watches thousands of products around the clock. The moment a price hits your target — you know first.</p>
+      <div class="hero-ctas">
+        <a href="https://vigildrop.com/pricing" class="btn-primary">Start Watching Free →</a>
+        <a href="#live" class="btn-ghost">See Live Drops ↓</a>
+      </div>
+    </div>
+
+    <div class="hero-cards" aria-label="Recent price drops">
+      <div class="float-card">
+        <div class="fc-name">RTX 4080 Super</div>
+        <div class="fc-prices"><s>$999</s> <span class="fc-new">$769</span> <span class="drop-badge">▼ 23% DROP</span></div>
+      </div>
+      <div class="float-card">
+        <div class="fc-name">Sony WH-1000XM5</div>
+        <div class="fc-prices"><s>$349</s> <span class="fc-new">$239</span> <span class="drop-badge">▼ 31% DROP</span></div>
+      </div>
+      <div class="float-card">
+        <div class="fc-name">AirPods Pro 2</div>
+        <div class="fc-prices"><s>$249</s> <span class="fc-new">$189</span> <span class="drop-badge">▼ 24% DROP</span></div>
+      </div>
     </div>
   </header>
 
-  <div class="strip">
-    <div>Checks every <b>6 hours</b>, around the clock</div>
-    <div>Alerts in <b>seconds</b> of a drop</div>
-    <div>Tracking <b>Amazon</b> — travel &amp; more coming</div>
+  <!-- ════ TICKER ═════════════════════════════ -->
+  <div class="ticker" id="live">
+    <div class="live-badge"><span class="red-dot"></span>LIVE</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="ticker-track"><!-- populated by JS, duplicated for seamless loop --></div>
+    </div>
   </div>
 
+  <!-- ════ STATS ══════════════════════════════ -->
+  <div class="stats" id="stats">
+    <div class="stat">
+      <div class="num" data-target="2.4" data-prefix="$" data-suffix="M+" data-decimals="1">$0M+</div>
+      <div class="lbl">saved by users</div>
+    </div>
+    <div class="stat">
+      <div class="num" data-target="48500" data-suffix="+">0+</div>
+      <div class="lbl">merchants tracked</div>
+    </div>
+    <div class="stat">
+      <div class="num" data-target="6">0</div>
+      <div class="lbl">hours between every scan</div>
+    </div>
+    <div class="stat">
+      <div class="num" data-target="30" data-prefix="&lt; " data-suffix="s">&lt; 0s</div>
+      <div class="lbl">from drop to alert</div>
+    </div>
+  </div>
+
+  <!-- ════ HOW IT WORKS ═══════════════════════ -->
+  <section class="hiw" id="how">
+    <div class="section-label">How It Works</div>
+    <h2>Three steps. Zero effort.</h2>
+    <p class="section-sub">Set it once — Vigil does the watching forever.</p>
+    <div class="hiw-rail">
+      <div class="hiw-line"></div>
+      <div class="hiw-steps">
+        <div class="step">
+          <div class="ico">🎯</div>
+          <h3>Set Your Target</h3>
+          <p>Tell Vigil what you want and what you'd pay.</p>
+        </div>
+        <div class="step">
+          <div class="ico">👁</div>
+          <h3>We Watch 24/7</h3>
+          <p>Vigil scans prices every 6 hours automatically.</p>
+        </div>
+        <div class="step">
+          <div class="ico">🔔</div>
+          <h3>You Get Alerted</h3>
+          <p>The moment it drops — Discord, email, or SMS.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ FEATURES ═══════════════════════════ -->
   <section id="features">
     <div class="section-label">Features</div>
     <h2>Your always-on price sentinel.</h2>
-    <p class="section-sub">Three steps between you and the best price on anything.</p>
+    <p class="section-sub">Everything between you and the best price on anything.</p>
     <div class="feature-grid">
       <div class="card">
         <span class="icon">👁</span>
@@ -242,55 +646,401 @@
     </div>
   </section>
 
+  <!-- ════ PRICING ════════════════════════════ -->
   <section id="pricing">
     <div class="section-label">Pricing</div>
     <h2>Pick your level of vigilance.</h2>
     <p class="section-sub">Start free. Upgrade when your watchlist outgrows it.</p>
+
+    <div class="toggle-row">
+      <span class="opt active" id="opt-monthly">Monthly</span>
+      <div class="switch" id="billing-switch" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle annual billing"></div>
+      <span class="opt" id="opt-annual">Annual</span>
+      <span class="save-pill">Save 20%</span>
+    </div>
+
     <div class="pricing-grid">
 
       <div class="price-card">
         <div class="tier-name">Free</div>
-        <div class="tier-price">$0<span>/forever</span></div>
+        <div class="tier-price"><span class="amt">$0</span><span>/forever</span></div>
+        <div class="billed-note"></div>
         <ul class="tier-features">
           <li>5 tracked products</li>
           <li>Email alerts</li>
           <li>Price history</li>
         </ul>
-        <a href="https://vigildrop.com/pricing" class="tier-cta ghost">Start Free</a>
+        <a href="https://vigildrop.com/pricing" class="tier-cta ghost-btn">Start Free</a>
       </div>
 
-      <div class="price-card popular">
-        <div class="popular-badge">Most Popular</div>
+      <div class="price-card pro">
+        <div class="tier-badge gold">Most Popular</div>
         <div class="tier-name">Pro</div>
-        <div class="tier-price">$9<span>/mo</span></div>
+        <div class="tier-price"><span class="amt" data-monthly="$9" data-annual="$7">$9</span><span>/mo</span></div>
+        <div class="billed-note" data-monthly="" data-annual="billed $84/yr"></div>
         <ul class="tier-features">
           <li>25 tracked products</li>
           <li>Discord + email alerts</li>
           <li>Price history</li>
           <li>Priority checks</li>
         </ul>
-        <a href="https://vigildrop.com/pricing" class="tier-cta gold">Go Pro</a>
+        <a href="https://vigildrop.com/pricing" class="tier-cta gold-btn">Go Pro</a>
       </div>
 
-      <div class="price-card">
+      <div class="price-card elite">
+        <div class="tier-badge purple">Best Value</div>
         <div class="tier-name">Elite</div>
-        <div class="tier-price">$29<span>/mo</span></div>
+        <div class="tier-price"><span class="amt" data-monthly="$29" data-annual="$23">$29</span><span>/mo</span></div>
+        <div class="billed-note" data-monthly="" data-annual="billed $276/yr"></div>
         <ul class="tier-features">
           <li>Unlimited products</li>
           <li>SMS + Discord + email</li>
           <li>API access</li>
           <li>Everything in Pro</li>
         </ul>
-        <a href="https://vigildrop.com/pricing" class="tier-cta ghost">Go Elite</a>
+        <a href="https://vigildrop.com/pricing" class="tier-cta ghost-btn">Go Elite</a>
       </div>
 
     </div>
   </section>
 
+  <!-- ════ DISCORD TOAST ══════════════════════ -->
+  <div id="discord-toast" role="status" aria-live="polite">
+    <div class="dt-top">
+      <span class="dt-discord-ico">🎮</span>
+      <span class="dt-channel">#vigil-alerts</span>
+    </div>
+    <div class="dt-bot">
+      <span class="bot-name">Vigil</span>
+      <span class="dt-check">✓ BOT</span>
+    </div>
+    <div class="dt-embed">
+      <div class="dt-title">🔻 PRICE DROP DETECTED</div>
+      <div class="dt-fields">
+        <div class="dt-field"><div class="k">Product</div><div class="v">RTX 4080 Super</div></div>
+        <div class="dt-field"><div class="k">Old Price</div><div class="v"><s>$999</s></div></div>
+        <div class="dt-field"><div class="k">New Price</div><div class="v green">$769</div></div>
+        <div class="dt-field"><div class="k">Savings</div><div class="v gold">$230 (23% off)</div></div>
+      </div>
+      <a href="https://vigildrop.com/pricing" class="dt-buy">Buy Now →</a>
+    </div>
+  </div>
+
+  <!-- ════ FOOTER ═════════════════════════════ -->
   <footer>
-    <div class="logo"><span class="eye"></span>VIGIL</div>
-    <div>© 2026 Axis Creative LLC · vigildrop.com</div>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><span class="eye"></span>VIGIL</div>
+        <p>Price intelligence for deal hunters and smart shoppers.</p>
+        <div class="tag">Watch · Alert · Win</div>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="https://vigildrop.com">Chrome Extension</a>
+        <a href="https://vigildrop.com">Discord Community</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="https://vigildrop.com">About</a>
+        <a href="https://vigildrop.com">Blog</a>
+        <a href="https://vigildrop.com">Affiliate Program</a>
+        <a href="https://vigildrop.com">Contact</a>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href="https://vigildrop.com">Terms</a>
+        <a href="https://vigildrop.com">Privacy</a>
+        <a href="https://vigildrop.com">Affiliate Disclosure</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      © 2026 Axis Creative LLC · vigildrop.com<br>
+      As an Amazon Associate, Vigil earns from qualifying purchases. Some links are affiliate links.
+    </div>
   </footer>
 
+  <script>
+  (function () {
+    'use strict';
+
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ════ TICKER CONTENT (11 products, duplicated for loop) ════ */
+    var tickerItems = [
+      ['RTX 4080 Super', 23, '$999', '$769'],
+      ['Sony WH-1000XM5', 31, '$349', '$239'],
+      ['AirPods Pro 2', 24, '$249', '$189'],
+      ['LG C4 OLED 65"', 28, '$1,499', '$1,079'],
+      ['Steam Deck OLED', 15, '$549', '$467'],
+      ['Dyson V15 Detect', 26, '$749', '$554'],
+      ['Bose QC Ultra', 21, '$429', '$339'],
+      ['Samsung 990 Pro 2TB', 34, '$199', '$131'],
+      ['Kindle Paperwhite', 27, '$159', '$116'],
+      ['GoPro Hero 13', 19, '$399', '$323'],
+      ['iPad Air M3', 17, '$599', '$497']
+    ];
+    var track = document.getElementById('ticker-track');
+    var html = tickerItems.map(function (it) {
+      return '<span class="tick-item">' + it[0] +
+        ' <span class="pct">▼' + it[1] + '%</span>' +
+        ' <s>' + it[2] + '</s>' +
+        ' <span class="new">' + it[3] + '</span></span>';
+    }).join('');
+    track.innerHTML = html + html; // duplicate → seamless -50% marquee
+
+    /* ════ TYPING EYEBROW ════ */
+    var typeText = 'PRICE INTELLIGENCE · REAL TIME';
+    var typeEl = document.getElementById('type-target');
+    if (reducedMotion) {
+      typeEl.textContent = typeText;
+    } else {
+      var ti = 0;
+      (function typeNext() {
+        if (ti <= typeText.length) {
+          typeEl.textContent = typeText.slice(0, ti);
+          ti++;
+          setTimeout(typeNext, 55);
+        }
+      })();
+    }
+
+    /* ════ HERO PRICE COUNTER ($999 → $649, 6s loop) ════ */
+    var counterEl = document.getElementById('price-counter');
+    if (reducedMotion) {
+      counterEl.textContent = '$649';
+      counterEl.classList.add('dropped');
+    } else {
+      var CYCLE = 6000, DROP_MS = 1500, HOLD_MS = 2000;
+      var FROM = 999, TO = 649;
+      var cycleStart = performance.now();
+      var easeOutCubic = function (t) { return 1 - Math.pow(1 - t, 3); };
+      var tickCounter = function (now) {
+        var t = (now - cycleStart) % CYCLE;
+        if ((now - cycleStart) >= CYCLE) cycleStart = now - t;
+        if (t < DROP_MS) {
+          var p = easeOutCubic(t / DROP_MS);
+          counterEl.textContent = '$' + Math.round(FROM - (FROM - TO) * p);
+          counterEl.classList.remove('dropped');
+        } else if (t < DROP_MS + HOLD_MS) {
+          counterEl.textContent = '$' + TO;
+          counterEl.classList.add('dropped');
+        } else {
+          counterEl.textContent = '$' + FROM;
+          counterEl.classList.remove('dropped');
+        }
+        requestAnimationFrame(tickCounter);
+      };
+      requestAnimationFrame(tickCounter);
+    }
+
+    /* ════ HERO CANVAS — particles + scan rings + grid + alerts ════ */
+    if (!reducedMotion) {
+      var canvas = document.getElementById('hero-canvas');
+      var ctx = canvas.getContext('2d');
+      var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+      var resize = function () {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        W = rect.width; H = rect.height;
+        canvas.width = W * DPR;
+        canvas.height = H * DPR;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      var PRICES = ['$999', '$449', '$1,299', '$89', '$249', '$769', '$1,079', '$339', '$59', '$549'];
+      var GOLDC = '245,200,66', CYANC = '0,212,255', REDC = '255,59,59';
+
+      var particles = [];
+      for (var i = 0; i < 26; i++) {
+        particles.push({
+          x: Math.random(),
+          y: Math.random(),
+          speed: 0.012 + Math.random() * 0.025,     // viewport-heights per second
+          size: 10 + Math.random() * 4,             // font px
+          text: PRICES[i % PRICES.length],
+          gold: Math.random() < 0.5,
+          opacity: 0.12 + Math.random() * 0.25,
+          alertUntil: 0,
+          alertPct: 0
+        });
+      }
+
+      var ringPhase = [0, 0.33, 0.66];
+      var lastAlert = performance.now();
+      var lastFrame = performance.now();
+
+      var drawGrid = function () {
+        ctx.strokeStyle = 'rgba(' + CYANC + ',0.04)';
+        ctx.lineWidth = 1;
+        var horizon = H * 0.55;
+        for (var r = 0; r < 10; r++) {
+          var y = horizon + Math.pow(r / 9, 1.8) * (H - horizon);
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+        var vp = W / 2;
+        for (var c = -8; c <= 8; c++) {
+          ctx.beginPath();
+          ctx.moveTo(vp + c * (W / 16) * 2.2, H);
+          ctx.lineTo(vp + c * (W / 16) * 0.5, horizon);
+          ctx.stroke();
+        }
+      };
+
+      var drawRings = function (now) {
+        var cx = W / 2, cy = H / 2;
+        var maxR = Math.max(W, H) * 0.62;
+        for (var k = 0; k < 3; k++) {
+          var t = ((now / 5200) + ringPhase[k]) % 1;
+          var alpha = 0.08 * (1 - t);
+          if (alpha <= 0.002) continue;
+          ctx.beginPath();
+          ctx.arc(cx, cy, t * maxR, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(' + CYANC + ',' + alpha.toFixed(3) + ')';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      };
+
+      var drawPill = function (p, now) {
+        var px = p.x * W, py = p.y * H;
+        var alerting = now < p.alertUntil;
+        var label = p.text;
+        ctx.font = '600 ' + p.size + 'px Sora, system-ui, sans-serif';
+        var tw = ctx.measureText(label).width;
+        var padX = 8, h = p.size + 10, w = tw + padX * 2;
+
+        var color = alerting ? REDC : (p.gold ? GOLDC : CYANC);
+        var alpha = alerting ? 0.85 : p.opacity;
+
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(px, py, w, h, h / 2);
+        else ctx.rect(px, py, w, h);
+        ctx.strokeStyle = 'rgba(' + color + ',' + (alpha * 0.8).toFixed(3) + ')';
+        ctx.fillStyle = 'rgba(' + color + ',' + (alpha * 0.10).toFixed(3) + ')';
+        ctx.lineWidth = 1;
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = 'rgba(' + color + ',' + alpha.toFixed(3) + ')';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, px + padX, py + h / 2 + 0.5);
+
+        if (alerting) {
+          var badge = '▼ ' + p.alertPct + '%';
+          ctx.font = '700 ' + (p.size - 1) + 'px Sora, system-ui, sans-serif';
+          ctx.fillStyle = 'rgba(' + REDC + ',0.95)';
+          ctx.fillText(badge, px + w + 8, py + h / 2 + 0.5);
+        }
+      };
+
+      var frame = function (now) {
+        var dt = Math.min((now - lastFrame) / 1000, 0.05);
+        lastFrame = now;
+        ctx.clearRect(0, 0, W, H);
+
+        drawGrid();
+        drawRings(now);
+
+        if (now - lastAlert > 8000) {
+          lastAlert = now;
+          var p = particles[Math.floor(Math.random() * particles.length)];
+          p.alertUntil = now + 2000;
+          p.alertPct = 12 + Math.floor(Math.random() * 27);
+        }
+
+        for (var j = 0; j < particles.length; j++) {
+          var pt = particles[j];
+          pt.y -= pt.speed * dt;            // drift upward
+          if (pt.y < -0.06) {
+            pt.y = 1.05;
+            pt.x = Math.random();
+            pt.text = PRICES[Math.floor(Math.random() * PRICES.length)];
+          }
+          drawPill(pt, now);
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    }
+
+    /* ════ STATS COUNT-UP (IntersectionObserver) ════ */
+    var statEls = document.querySelectorAll('.stat .num');
+    var renderStat = function (el, value) {
+      var dec = parseInt(el.dataset.decimals || '0', 10);
+      var prefix = el.dataset.prefix || '';
+      var suffix = el.dataset.suffix || '';
+      var num = dec > 0 ? value.toFixed(dec) : Math.round(value).toLocaleString('en-US');
+      el.innerHTML = prefix + num + suffix;
+    };
+    var countUp = function (el) {
+      var target = parseFloat(el.dataset.target);
+      if (reducedMotion) { renderStat(el, target); return; }
+      var start = performance.now(), DUR = 1500;
+      var stepFn = function (now) {
+        var p = Math.min((now - start) / DUR, 1);
+        renderStat(el, target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(stepFn);
+      };
+      requestAnimationFrame(stepFn);
+    };
+    var statsSeen = false;
+    var statsObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !statsSeen) {
+          statsSeen = true;
+          statEls.forEach(countUp);
+          statsObs.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    statsObs.observe(document.getElementById('stats'));
+
+    /* ════ HOW IT WORKS — line draw + step stagger on scroll ════ */
+    var hiw = document.querySelector('.hiw');
+    var hiwObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          hiw.classList.add('visible');
+          hiwObs.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    hiwObs.observe(hiw);
+
+    /* ════ PRICING TOGGLE ════ */
+    var sw = document.getElementById('billing-switch');
+    var optM = document.getElementById('opt-monthly');
+    var optA = document.getElementById('opt-annual');
+    var annual = false;
+    var applyBilling = function () {
+      sw.classList.toggle('annual', annual);
+      sw.setAttribute('aria-checked', String(annual));
+      optM.classList.toggle('active', !annual);
+      optA.classList.toggle('active', annual);
+      document.querySelectorAll('[data-monthly]').forEach(function (el) {
+        var v = annual ? el.dataset.annual : el.dataset.monthly;
+        el.textContent = v || '';
+      });
+    };
+    var toggleBilling = function () { annual = !annual; applyBilling(); };
+    sw.addEventListener('click', toggleBilling);
+    sw.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBilling(); }
+    });
+    optM.addEventListener('click', function () { if (annual) toggleBilling(); });
+    optA.addEventListener('click', function () { if (!annual) toggleBilling(); });
+
+    /* ════ DISCORD TOAST — fire 3s, stay 7s, repeat 25s ════ */
+    var toast = document.getElementById('discord-toast');
+    var fireToast = function () {
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 7000);
+    };
+    setTimeout(fireToast, 3000);
+    setInterval(fireToast, 25000);
+  })();
+  </script>
 </body>
 </html>
