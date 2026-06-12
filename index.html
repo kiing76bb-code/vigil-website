@@ -1177,6 +1177,14 @@
         var v = annual ? el.dataset.annual : el.dataset.monthly;
         el.textContent = v || '';
       });
+      var proCta = document.querySelector('.tier-cta.green-cta');
+      var eliteCta = document.querySelector('.tier-cta.cyan-cta');
+      if (proCta) proCta.href = annual
+        ? 'https://buy.stripe.com/6oU14obOe8qjgLB4Wwfbq0c'
+        : 'https://buy.stripe.com/cNieVef0qeOH8f588Ifbq0a';
+      if (eliteCta) eliteCta.href = annual
+        ? 'https://buy.stripe.com/eVqaEY19A6iband3Ssfbq0d'
+        : 'https://buy.stripe.com/5kQ8wQ2dEayr2UL0Ggfbq0b';
     };
     var toggleBilling = function () { annual = !annual; applyBilling(); };
     sw.addEventListener('click', toggleBilling);
