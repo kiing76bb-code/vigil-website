@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="impact-site-verification" value="6266d766-9945-40d8-b621-037df2d7bb0d">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Deals — Vigil</title>
+  <meta name="description" content="Every product Vigil is watching right now, with live prices and real price history. Spot fake sales, buy at the true bottom.">
+  <link rel="canonical" href="https://vigildrop.com/deals">
+  <link rel="stylesheet" href="/assets/vigil.css">
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo"><span class="eye"></span>VIGIL</a>
+    <div class="nav-links">
+      <a href="/deals" class="active">Live Deals</a>
+      <a href="/blog">Blog</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/about">About</a>
+      <a href="/#pricing" class="cta-btn">Start Tracking</a>
+    </div>
+  </nav>
+
+  <header class="page-head">
+    <span class="kicker"><span class="live-dot"></span>Live Markets</span>
+    <h1>Every price Vigil is <em>watching</em>.</h1>
+    <p class="page-sub">Real prices, checked every 6 hours and logged forever. See the true trend, catch fake &ldquo;sales,&rdquo; and buy at the actual bottom.</p>
+  </header>
+
+  <main class="wrap">
+    <div class="cta-band">
+      <h3>Get price drops the second they happen</h3>
+      <p>Join the Vigil Telegram for instant alerts — no app, no refreshing, no FOMO.</p>
+      <a class="btn-primary" href="https://t.me/vigildrop" target="_blank" rel="noopener noreferrer">Join our Telegram →</a>
+    </div>
+
+    <div id="deal-grid" class="deal-grid" aria-live="polite">
+      <div class="empty">Loading live prices…</div>
+    </div>
+
+    <div class="xlinks">
+      <a href="/blog">→ Read the Vigil Blog</a>
+      <a href="/blog/how-we-verify-deals">→ How We Verify Deals</a>
+      <a href="/blog/best-headphones">→ Best Headphones (Live Pricing)</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><span class="eye"></span>VIGIL</div>
+        <p>Price intelligence for deal hunters and smart shoppers.</p>
+        <div class="tag">Watch · Alert · Win</div>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="/deals">Live Deals</a>
+        <a href="/#features">Features</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/blog">Blog</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="/blog">Blog</a>
+        <a href="/blog/how-we-verify-deals">How We Verify</a>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href="/privacy">Privacy</a>
+        <a href="/affiliate-disclosure">Affiliate Disclosure</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      © 2026 Axis Creative LLC · vigildrop.com<br>
+      As an Amazon Associate, Vigil earns from qualifying purchases. Some links are affiliate links.
+    </div>
+  </footer>
+
+  <script src="/assets/vigil-data.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var V = window.VIGIL;
+    var grid = document.getElementById("deal-grid");
+
+    function cardHTML(p, hist) {
+      var series = hist.map(function (h) { return h.recorded_price; });
+      var firstSeen = series.length ? series[0] : null;
+      var latest = (p.current_price != null) ? p.current_price : (series.length ? series[series.length - 1] : null);
+      var lastChecked = hist.length ? hist[hist.length - 1].recorded_at : null;
+      var target = (p.target_price != null) ? p.target_price : null;
+      var hit = (latest != null && target != null && latest <= target);
+      var vsFirst = V.pctDrop(firstSeen, latest);
+
+      var badge = '<span class="badge-watching">● WATCHING</span>';
+      if (hit) badge = '<span class="badge-hit">▼ TARGET HIT</span>';
+      else if (vsFirst != null && vsFirst < 0) badge = '<span class="badge-up">▲ ' + Math.abs(vsFirst) + '% UP</span>';
+
+      var isAmazon = /amazon\./i.test(p.url || "");
+      var wasHTML = (firstSeen != null && latest != null && firstSeen > latest)
+        ? '<span class="price-was">' + V.money(firstSeen) + '</span>' : '';
+      var spark = series.length >= 2
+        ? '<svg class="spark" width="120" height="32" viewBox="0 0 120 32" aria-hidden="true"><polyline points="' + V.sparkPoints(series) + '"></polyline></svg>'
+        : '<span style="color:var(--muted);font-size:12px;">building history…</span>';
+
+      return '<div class="deal-card">' +
+        '<div class="merchant">' + (isAmazon ? "AMAZON" : "TRACKED") + '</div>' +
+        '<div class="name">' + V.escapeHtml(p.name) + '</div>' +
+        '<div class="price-row"><span class="price-now' + (hit ? '' : ' neutral') + '">' + V.money(latest) + '</span>' + wasHTML + ' ' + badge + '</div>' +
+        '<div class="meta-row">' + spark + '<span>' + (target != null ? 'target ' + V.money(target) + ' · ' : '') + V.timeAgo(lastChecked) + '</span></div>' +
+        '<a class="deal-link" href="' + V.escapeHtml(V.addAmazonTag(p.url || "#")) + '" target="_blank" rel="noopener noreferrer sponsored">View deal →</a>' +
+        '</div>';
+    }
+
+    Promise.all([V.getProducts(), V.getPriceHistory()]).then(function (res) {
+      var products = res[0] || [], history = res[1] || [];
+      var byProduct = V.seriesByProduct(history);
+
+      if (!products.length) {
+        grid.innerHTML = '<div class="empty">No tracked products yet, or the price feed is warming up. Check back after the next scan.</div>';
+        return;
+      }
+
+      var enriched = products.map(function (p) {
+        var h = byProduct[String(p.id)] || [];
+        var first = h.length ? h[0].recorded_price : null;
+        var latest = (p.current_price != null) ? p.current_price : (h.length ? h[h.length - 1].recorded_price : null);
+        var drop = V.pctDrop(first, latest); if (drop == null) drop = -999;
+        var hit = (latest != null && p.target_price != null && latest <= p.target_price);
+        return { p: p, h: h, score: (hit ? 1000 : 0) + drop };
+      }).sort(function (a, b) { return b.score - a.score; });
+
+      grid.innerHTML = enriched.map(function (e) { return cardHTML(e.p, e.h); }).join("");
+    }).catch(function () {
+      grid.innerHTML = '<div class="empty">Couldn’t load live prices right now. Please refresh in a moment.</div>';
+    });
+  })();
+  </script>
+  <script type="text/javascript" src="//s.skimresources.com/js/304616.skimlinks.js"></script>
+</body>
+</html>
