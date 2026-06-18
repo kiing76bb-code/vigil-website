@@ -839,6 +839,21 @@
         <a href="https://buy.stripe.com/28E7sMbKxceWgTMdek7bW00" target="_blank" rel="noopener noreferrer" class="tier-cta green-cta">Go Pro</a>
       </div>
 
+      <div class="price-card proplus">
+        <div class="tier-badge cyan-badge">Best Upgrade</div>
+        <div class="tier-name">Pro+</div>
+        <div class="tier-price"><span class="amt" data-monthly="$15" data-annual="$12">$15</span><span>/mo</span></div>
+        <div class="billed-note" data-monthly="" data-annual="billed $144/yr"></div>
+        <ul class="tier-features">
+          <li>25 tracked products</li>
+          <li>Discord + email alerts</li>
+          <li>Telegram alerts</li>
+          <li>Price history</li>
+          <li>Priority checks</li>
+        </ul>
+        <a href="https://buy.stripe.com/5kQfZi29Xen4bzs4HO7bW04" target="_blank" rel="noopener noreferrer" class="tier-cta cyan-cta">Go Pro+</a>
+      </div>
+
       <div class="price-card elite">
         <div class="tier-badge cyan-badge">Best Value</div>
         <div class="tier-name">Elite</div>
@@ -846,7 +861,9 @@
         <div class="billed-note" data-monthly="" data-annual="billed $276/yr"></div>
         <ul class="tier-features">
           <li>Unlimited products</li>
-          <li>SMS + Discord + email</li>
+          <li>Discord + email alerts</li>
+          <li>Telegram alerts</li>
+          <li>SMS alerts</li>
           <li>Everything in Pro</li>
         </ul>
         <a href="https://buy.stripe.com/dRmbJ28yl1AifPIa287bW02" target="_blank" rel="noopener noreferrer" class="tier-cta cyan-cta">Go Elite</a>
@@ -1177,11 +1194,15 @@
         var v = annual ? el.dataset.annual : el.dataset.monthly;
         el.textContent = v || '';
       });
-      var proCta = document.querySelector('.tier-cta.green-cta');
-      var eliteCta = document.querySelector('.tier-cta.cyan-cta');
+      var proCta = document.querySelector('.price-card.pro .tier-cta');
+      var proPlusCta = document.querySelector('.price-card.proplus .tier-cta');
+      var eliteCta = document.querySelector('.price-card.elite .tier-cta');
       if (proCta) proCta.href = annual
         ? 'https://buy.stripe.com/bJebJ229XceW470b6c7bW01'
         : 'https://buy.stripe.com/28E7sMbKxceWgTMdek7bW00';
+      if (proPlusCta) proPlusCta.href = annual
+        ? 'https://buy.stripe.com/6oU6oIaGtgvcavo3DK7bW05'
+        : 'https://buy.stripe.com/5kQfZi29Xen4bzs4HO7bW04';
       if (eliteCta) eliteCta.href = annual
         ? 'https://buy.stripe.com/9B6bJ24i5en4fPI7U07bW03'
         : 'https://buy.stripe.com/dRmbJ28yl1AifPIa287bW02';
