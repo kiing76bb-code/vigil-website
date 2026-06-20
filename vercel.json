@@ -1,7 +1,9 @@
 {
   "version": 2,
   "builds": [
-    { "src": "**/*.{html,css,js,txt,xml,json,ico,png,svg,webmanifest}", "use": "@vercel/static" }
+    { "src": "api/**/*.js", "use": "@vercel/node" },
+    { "src": "**/*.{html,css,txt,xml,json,ico,png,svg,webmanifest}", "use": "@vercel/static" },
+    { "src": "assets/**/*.js", "use": "@vercel/static" }
   ],
   "routes": [
     {
@@ -27,6 +29,8 @@
     { "src": "/about/?", "dest": "/about/index.html" },
     { "src": "/affiliate-disclosure/?", "dest": "/affiliate-disclosure/index.html" },
     { "src": "/privacy/?", "dest": "/privacy/index.html" },
+
+    { "src": "/api/post-tweet", "dest": "/api/post-tweet.js" },
 
     { "handle": "filesystem" },
 
