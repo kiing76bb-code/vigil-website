@@ -69,6 +69,9 @@ function buildOAuthHeader(method, url, body) {
 }
 
 export default async function handler(req, res) {
+  console.log('[post-tweet debug] secret present:', typeof process.env.INTERNAL_API_SECRET, '| first 4 chars:', (process.env.INTERNAL_API_SECRET || '').slice(0, 4));
+  console.log('[post-tweet debug] received header:', (req.headers['x-internal-secret'] || 'MISSING').slice(0, 4));
+
   // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
