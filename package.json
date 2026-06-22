@@ -1,0 +1,11 @@
+{
+  "name": "vigil-website",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "twitter-api-v2": "^1.17.2"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
