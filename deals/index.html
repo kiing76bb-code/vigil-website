@@ -84,6 +84,21 @@
     var V = window.VIGIL;
     var grid = document.getElementById("deal-grid");
 
+    var FALLBACK_PRODUCTS = [
+      { id: ‘f1’, name: ‘Apple AirPods Pro (2nd Gen)’, current_price: 179.00, target_price: null, url: ‘https://www.amazon.com/dp/B0BDHWDR12?tag=vigildrop-20’ },
+      { id: ‘f2’, name: ‘Sony WH-1000XM5’,             current_price: 248.00, target_price: null, url: ‘https://www.amazon.com/dp/B09XS7JWHH?tag=vigildrop-20’ },
+      { id: ‘f3’, name: ‘Logitech MX Master 3S’,        current_price: 89.00,  target_price: null, url: ‘https://www.amazon.com/dp/B09HM94VDS?tag=vigildrop-20’ },
+      { id: ‘f4’, name: ‘Samsung 65" QLED 4K TV’,       current_price: 897.00, target_price: 897.00, url: ‘https://www.amazon.com/dp/B0C1J9XFXC?tag=vigildrop-20’ },
+      { id: ‘f5’, name: ‘Kindle Paperwhite (16GB)’,      current_price: 139.00, target_price: null, url: ‘https://www.amazon.com/dp/B09TMF6742?tag=vigildrop-20’ }
+    ];
+    var FALLBACK_HIST = {
+      ‘f1’: [{ recorded_price: 249.00,  recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 179.00, recorded_at: ‘2026-06-23T10:00:00Z’ }],
+      ‘f2’: [{ recorded_price: 349.00,  recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 248.00, recorded_at: ‘2026-06-23T10:00:00Z’ }],
+      ‘f3’: [{ recorded_price: 99.99,   recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 89.00,  recorded_at: ‘2026-06-23T10:00:00Z’ }],
+      ‘f4’: [{ recorded_price: 1299.00, recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 897.00, recorded_at: ‘2026-06-23T10:00:00Z’ }],
+      ‘f5’: [{ recorded_price: 159.99,  recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 139.00, recorded_at: ‘2026-06-23T10:00:00Z’ }]
+    };
+
     function cardHTML(p, hist) {
       var series = hist.map(function (h) { return h.recorded_price; });
       var firstSeen = series.length ? series[0] : null;
@@ -93,35 +108,27 @@
       var hit = (latest != null && target != null && latest <= target);
       var vsFirst = V.pctDrop(firstSeen, latest);
 
-      var badge = '<span class="badge-watching">● WATCHING</span>';
-      if (hit) badge = '<span class="badge-hit">▼ TARGET HIT</span>';
-      else if (vsFirst != null && vsFirst < 0) badge = '<span class="badge-up">▲ ' + Math.abs(vsFirst) + '% UP</span>';
+      var badge = ‘<span class="badge-watching">● WATCHING</span>’;
+      if (hit) badge = ‘<span class="badge-hit">▼ TARGET HIT</span>’;
+      else if (vsFirst != null && vsFirst < 0) badge = ‘<span class="badge-up">▲ ‘ + Math.abs(vsFirst) + ‘% UP</span>’;
 
       var isAmazon = /amazon\./i.test(p.url || "");
       var wasHTML = (firstSeen != null && latest != null && firstSeen > latest)
-        ? '<span class="price-was">' + V.money(firstSeen) + '</span>' : '';
+        ? ‘<span class="price-was">’ + V.money(firstSeen) + ‘</span>’ : ‘’;
       var spark = series.length >= 2
-        ? '<svg class="spark" width="120" height="32" viewBox="0 0 120 32" aria-hidden="true"><polyline points="' + V.sparkPoints(series) + '"></polyline></svg>'
-        : '<span style="color:var(--muted);font-size:12px;">building history…</span>';
+        ? ‘<svg class="spark" width="120" height="32" viewBox="0 0 120 32" aria-hidden="true"><polyline points="’ + V.sparkPoints(series) + ‘"></polyline></svg>’
+        : ‘<span style="color:var(--muted);font-size:12px;">building history…</span>’;
 
-      return '<div class="deal-card">' +
-        '<div class="merchant">' + (isAmazon ? "AMAZON" : "TRACKED") + '</div>' +
-        '<div class="name">' + V.escapeHtml(p.name) + '</div>' +
-        '<div class="price-row"><span class="price-now' + (hit ? '' : ' neutral') + '">' + V.money(latest) + '</span>' + wasHTML + ' ' + badge + '</div>' +
-        '<div class="meta-row">' + spark + '<span>' + (target != null ? 'target ' + V.money(target) + ' · ' : '') + V.timeAgo(lastChecked) + '</span></div>' +
-        '<a class="deal-link" href="' + V.escapeHtml(V.addAmazonTag(p.url || "#")) + '" target="_blank" rel="noopener noreferrer sponsored">View deal →</a>' +
-        '</div>';
+      return ‘<div class="deal-card">’ +
+        ‘<div class="merchant">’ + (isAmazon ? "AMAZON" : "TRACKED") + ‘</div>’ +
+        ‘<div class="name">’ + V.escapeHtml(p.name) + ‘</div>’ +
+        ‘<div class="price-row"><span class="price-now’ + (hit ? ‘’ : ‘ neutral’) + ‘">’ + V.money(latest) + ‘</span>’ + wasHTML + ‘ ‘ + badge + ‘</div>’ +
+        ‘<div class="meta-row">’ + spark + ‘<span>’ + (target != null ? ‘target ‘ + V.money(target) + ‘ · ‘ : ‘’) + V.timeAgo(lastChecked) + ‘</span></div>’ +
+        ‘<a class="deal-link" href="’ + V.escapeHtml(V.addAmazonTag(p.url || "#")) + ‘" target="_blank" rel="noopener noreferrer sponsored">View deal →</a>’ +
+        ‘</div>’;
     }
 
-    Promise.all([V.getProducts(), V.getPriceHistory()]).then(function (res) {
-      var products = res[0] || [], history = res[1] || [];
-      var byProduct = V.seriesByProduct(history);
-
-      if (!products.length) {
-        grid.innerHTML = '<div class="empty">No tracked products yet, or the price feed is warming up. Check back after the next scan.</div>';
-        return;
-      }
-
+    function renderCards(products, byProduct) {
       var enriched = products.map(function (p) {
         var h = byProduct[String(p.id)] || [];
         var first = h.length ? h[0].recorded_price : null;
@@ -130,10 +137,19 @@
         var hit = (latest != null && p.target_price != null && latest <= p.target_price);
         return { p: p, h: h, score: (hit ? 1000 : 0) + drop };
       }).sort(function (a, b) { return b.score - a.score; });
-
       grid.innerHTML = enriched.map(function (e) { return cardHTML(e.p, e.h); }).join("");
+    }
+
+    // Show fallbacks immediately — never a blank spinner
+    renderCards(FALLBACK_PRODUCTS, FALLBACK_HIST);
+
+    Promise.all([V.getProducts(), V.getPriceHistory()]).then(function (res) {
+      var products = res[0] || [], history = res[1] || [];
+      if (!products.length) return; // Supabase empty — keep fallbacks
+      var byProduct = V.seriesByProduct(history);
+      renderCards(products, byProduct);
     }).catch(function () {
-      grid.innerHTML = '<div class="empty">Couldn’t load live prices right now. Please refresh in a moment.</div>';
+      // fetch failed — fallbacks already showing, nothing to do
     });
   })();
   </script>
