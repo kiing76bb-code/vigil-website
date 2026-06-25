@@ -143,7 +143,9 @@
     }
 
     // Show fallbacks immediately — never a blank spinner
-    renderCards(FALLBACK_PRODUCTS, FALLBACK_HIST);
+    var FALLBACK_BY_ID = {};
+    FALLBACK_PRODUCTS.forEach(function (p) { FALLBACK_BY_ID[String(p.id)] = FALLBACK_HIST[p.id] || []; });
+    renderCards(FALLBACK_PRODUCTS, FALLBACK_BY_ID);
 
     Promise.all([V.getProducts(), V.getPriceHistory()]).then(function (res) {
       var products = res[0] || [], history = res[1] || [];
