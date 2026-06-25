@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-label="Vigil Instagram avatar">
+  <defs>
+    <linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#00B0FF"/>
+      <stop offset="1" stop-color="#00E676"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1080" height="1080" fill="#0B0F19"/>
+  <circle cx="540" cy="540" r="505" fill="none" stroke="rgba(0,176,255,0.10)" stroke-width="3"/>
+  <circle cx="540" cy="540" r="430" fill="none" stroke="rgba(0,176,255,0.06)" stroke-width="3"/>
+  <g transform="translate(165,187.5) scale(7.5)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M33 22 L50 40 L67 22" stroke="#00B0FF" stroke-width="7" opacity="0.3"/>
+    <path d="M22 40 L50 72 L78 40" stroke="url(#vg)" stroke-width="14"/>
+  </g>
+</svg>

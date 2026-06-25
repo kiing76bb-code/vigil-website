@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Vigil icon monochrome">
+  <g transform="translate(4,6.8) scale(0.92)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M33 22 L50 40 L67 22" stroke="#F0EEF8" stroke-width="7" opacity="0.28"/>
+    <path d="M22 40 L50 72 L78 40" stroke="#F0EEF8" stroke-width="14"/>
+  </g>
+</svg>
