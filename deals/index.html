@@ -79,82 +79,84 @@
 
   <script src="/assets/vigil-data.js"></script>
   <script>
-  (function () {
-    "use strict";
+  function vigilRenderDeals() {
     var V = window.VIGIL;
-    if (!V) { return; }
-    var grid = document.getElementById("deal-grid");
+    var grid = document.getElementById('deal-grid');
+    if (!V || !grid) { return; }
 
     var FALLBACK_PRODUCTS = [
-      { id: ‘f1’, name: ‘Apple AirPods Pro (2nd Gen)’, current_price: 179.00, target_price: null, url: ‘https://www.amazon.com/dp/B0BDHWDR12?tag=vigildrop-20’ },
-      { id: ‘f2’, name: ‘Sony WH-1000XM5’,             current_price: 248.00, target_price: null, url: ‘https://www.amazon.com/dp/B09XS7JWHH?tag=vigildrop-20’ },
-      { id: ‘f3’, name: ‘Logitech MX Master 3S’,        current_price: 89.00,  target_price: null, url: ‘https://www.amazon.com/dp/B09HM94VDS?tag=vigildrop-20’ },
-      { id: ‘f4’, name: ‘Samsung 65" QLED 4K TV’,       current_price: 897.00, target_price: 897.00, url: ‘https://www.amazon.com/dp/B0C1J9XFXC?tag=vigildrop-20’ },
-      { id: ‘f5’, name: ‘Kindle Paperwhite (16GB)’,      current_price: 139.00, target_price: null, url: ‘https://www.amazon.com/dp/B09TMF6742?tag=vigildrop-20’ }
+      { id: 'f1', name: 'Apple AirPods Pro (2nd Gen)', current_price: 179.00, target_price: null,   url: 'https://www.amazon.com/dp/B0BDHWDR12?tag=vigildrop-20' },
+      { id: 'f2', name: 'Sony WH-1000XM5',             current_price: 248.00, target_price: null,   url: 'https://www.amazon.com/dp/B09XS7JWHH?tag=vigildrop-20' },
+      { id: 'f3', name: 'Logitech MX Master 3S',        current_price: 89.00,  target_price: null,   url: 'https://www.amazon.com/dp/B09HM94VDS?tag=vigildrop-20' },
+      { id: 'f4', name: 'Samsung 65" QLED 4K TV',       current_price: 897.00, target_price: 897.00, url: 'https://www.amazon.com/dp/B0C1J9XFXC?tag=vigildrop-20' },
+      { id: 'f5', name: 'Kindle Paperwhite (16GB)',      current_price: 139.00, target_price: null,   url: 'https://www.amazon.com/dp/B09TMF6742?tag=vigildrop-20' }
     ];
     var FALLBACK_HIST = {
-      ‘f1’: [{ recorded_price: 249.00,  recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 179.00, recorded_at: ‘2026-06-23T10:00:00Z’ }],
-      ‘f2’: [{ recorded_price: 349.00,  recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 248.00, recorded_at: ‘2026-06-23T10:00:00Z’ }],
-      ‘f3’: [{ recorded_price: 99.99,   recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 89.00,  recorded_at: ‘2026-06-23T10:00:00Z’ }],
-      ‘f4’: [{ recorded_price: 1299.00, recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 897.00, recorded_at: ‘2026-06-23T10:00:00Z’ }],
-      ‘f5’: [{ recorded_price: 159.99,  recorded_at: ‘2026-06-16T00:00:00Z’ }, { recorded_price: 139.00, recorded_at: ‘2026-06-23T10:00:00Z’ }]
+      f1: [{ recorded_price: 249.00,  recorded_at: '2026-06-16T00:00:00Z' }, { recorded_price: 179.00, recorded_at: '2026-06-23T10:00:00Z' }],
+      f2: [{ recorded_price: 349.00,  recorded_at: '2026-06-16T00:00:00Z' }, { recorded_price: 248.00, recorded_at: '2026-06-23T10:00:00Z' }],
+      f3: [{ recorded_price: 99.99,   recorded_at: '2026-06-16T00:00:00Z' }, { recorded_price: 89.00,  recorded_at: '2026-06-23T10:00:00Z' }],
+      f4: [{ recorded_price: 1299.00, recorded_at: '2026-06-16T00:00:00Z' }, { recorded_price: 897.00, recorded_at: '2026-06-23T10:00:00Z' }],
+      f5: [{ recorded_price: 159.99,  recorded_at: '2026-06-16T00:00:00Z' }, { recorded_price: 139.00, recorded_at: '2026-06-23T10:00:00Z' }]
     };
 
     function cardHTML(p, hist) {
-      var series = hist.map(function (h) { return h.recorded_price; });
-      var firstSeen = series.length ? series[0] : null;
-      var latest = (p.current_price != null) ? p.current_price : (series.length ? series[series.length - 1] : null);
-      var lastChecked = hist.length ? hist[hist.length - 1].recorded_at : null;
-      var target = (p.target_price != null) ? p.target_price : null;
-      var hit = (latest != null && target != null && latest <= target);
-      var vsFirst = V.pctDrop(firstSeen, latest);
+      var series = (hist || []).map(function(h){ return h.recorded_price; });
+      var firstSeen   = series.length ? series[0] : null;
+      var latest      = p.current_price != null ? p.current_price : (series.length ? series[series.length-1] : null);
+      var lastChecked = hist && hist.length ? hist[hist.length-1].recorded_at : null;
+      var target      = p.target_price != null ? p.target_price : null;
+      var hit         = latest != null && target != null && latest <= target;
+      var vsFirst     = V.pctDrop(firstSeen, latest);
 
-      var badge = ‘<span class="badge-watching">● WATCHING</span>’;
-      if (hit) badge = ‘<span class="badge-hit">▼ TARGET HIT</span>’;
-      else if (vsFirst != null && vsFirst < 0) badge = ‘<span class="badge-up">▲ ‘ + Math.abs(vsFirst) + ‘% UP</span>’;
+      var badge = '<span class="badge-watching">\u25cf WATCHING</span>';
+      if (hit)                              badge = '<span class="badge-hit">\u25bc TARGET HIT</span>';
+      else if (vsFirst != null && vsFirst < 0) badge = '<span class="badge-up">\u25b2 ' + Math.abs(vsFirst) + '% UP</span>';
 
-      var isAmazon = /amazon\./i.test(p.url || "");
-      var wasHTML = (firstSeen != null && latest != null && firstSeen > latest)
-        ? ‘<span class="price-was">’ + V.money(firstSeen) + ‘</span>’ : ‘’;
+      var wasHTML = firstSeen != null && latest != null && firstSeen > latest
+        ? '<span class="price-was">' + V.money(firstSeen) + '</span>' : '';
       var spark = series.length >= 2
-        ? ‘<svg class="spark" width="120" height="32" viewBox="0 0 120 32" aria-hidden="true"><polyline points="’ + V.sparkPoints(series) + ‘"></polyline></svg>’
-        : ‘<span style="color:var(--muted);font-size:12px;">building history…</span>’;
+        ? '<svg class="spark" width="120" height="32" viewBox="0 0 120 32" aria-hidden="true"><polyline points="' + V.sparkPoints(series) + '"></polyline></svg>'
+        : '<span style="color:var(--muted);font-size:12px;">building history\u2026</span>';
 
-      return ‘<div class="deal-card">’ +
-        ‘<div class="merchant">’ + (isAmazon ? "AMAZON" : "TRACKED") + ‘</div>’ +
-        ‘<div class="name">’ + V.escapeHtml(p.name) + ‘</div>’ +
-        ‘<div class="price-row"><span class="price-now’ + (hit ? ‘’ : ‘ neutral’) + ‘">’ + V.money(latest) + ‘</span>’ + wasHTML + ‘ ‘ + badge + ‘</div>’ +
-        ‘<div class="meta-row">’ + spark + ‘<span>’ + (target != null ? ‘target ‘ + V.money(target) + ‘ · ‘ : ‘’) + V.timeAgo(lastChecked) + ‘</span></div>’ +
-        ‘<a class="deal-link" href="’ + V.escapeHtml(V.addAmazonTag(p.url || "#")) + ‘" target="_blank" rel="noopener noreferrer sponsored">View deal →</a>’ +
-        ‘</div>’;
+      return '<div class="deal-card">' +
+        '<div class="merchant">' + (/amazon\./i.test(p.url||'') ? 'AMAZON' : 'TRACKED') + '</div>' +
+        '<div class="name">'     + V.escapeHtml(p.name) + '</div>' +
+        '<div class="price-row"><span class="price-now' + (hit?'':' neutral') + '">' + V.money(latest) + '</span>' + wasHTML + ' ' + badge + '</div>' +
+        '<div class="meta-row">' + spark + '<span>' + (target ? 'target ' + V.money(target) + ' \u00b7 ' : '') + V.timeAgo(lastChecked) + '</span></div>' +
+        '<a class="deal-link" href="' + V.escapeHtml(V.addAmazonTag(p.url||'#')) + '" target="_blank" rel="noopener noreferrer sponsored">View deal \u2192</a>' +
+        '</div>';
     }
 
-    function renderCards(products, byProduct) {
-      var enriched = products.map(function (p) {
-        var h = byProduct[String(p.id)] || [];
+    function renderCards(products, byId) {
+      var rows = products.map(function(p) {
+        var h     = (byId[String(p.id)] || []);
         var first = h.length ? h[0].recorded_price : null;
-        var latest = (p.current_price != null) ? p.current_price : (h.length ? h[h.length - 1].recorded_price : null);
-        var drop = V.pctDrop(first, latest); if (drop == null) drop = -999;
-        var hit = (latest != null && p.target_price != null && latest <= p.target_price);
+        var lat   = p.current_price != null ? p.current_price : (h.length ? h[h.length-1].recorded_price : null);
+        var drop  = V.pctDrop(first, lat) || -999;
+        var hit   = lat != null && p.target_price != null && lat <= p.target_price;
         return { p: p, h: h, score: (hit ? 1000 : 0) + drop };
-      }).sort(function (a, b) { return b.score - a.score; });
-      grid.innerHTML = enriched.map(function (e) { return cardHTML(e.p, e.h); }).join("");
+      }).sort(function(a,b){ return b.score - a.score; });
+      grid.innerHTML = rows.map(function(r){ return cardHTML(r.p, r.h); }).join('');
     }
 
-    // Show fallbacks immediately — never a blank spinner
-    var FALLBACK_BY_ID = {};
-    FALLBACK_PRODUCTS.forEach(function (p) { FALLBACK_BY_ID[String(p.id)] = FALLBACK_HIST[p.id] || []; });
-    renderCards(FALLBACK_PRODUCTS, FALLBACK_BY_ID);
+    // Paint fallbacks instantly — no spinner ever
+    var fbById = {};
+    FALLBACK_PRODUCTS.forEach(function(p){ fbById[p.id] = FALLBACK_HIST[p.id] || []; });
+    renderCards(FALLBACK_PRODUCTS, fbById);
 
-    Promise.all([V.getProducts(), V.getPriceHistory()]).then(function (res) {
+    // Replace with live Supabase data when ready
+    Promise.all([V.getProducts(), V.getPriceHistory()]).then(function(res) {
       var products = res[0] || [], history = res[1] || [];
-      if (!products.length) return; // Supabase empty — keep fallbacks
-      var byProduct = V.seriesByProduct(history);
-      renderCards(products, byProduct);
-    }).catch(function () {
-      // fetch failed — fallbacks already showing, nothing to do
-    });
-  })();
+      if (!products.length) { return; } // keep fallbacks
+      renderCards(products, V.seriesByProduct(history));
+    }).catch(function(){ /* fallbacks already visible */ });
+  }
+
+  // Run on first load AND on bfcache restore (back/forward button)
+  vigilRenderDeals();
+  window.addEventListener('pageshow', function(e) {
+    if (e.persisted) { vigilRenderDeals(); }
+  });
   </script>
   <script type="text/javascript" src="//s.skimresources.com/js/304616.skimlinks.js"></script>
 </body>
